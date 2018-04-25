@@ -1,10 +1,7 @@
 package com.example.oleks.qrfest;
 
-import android.*;
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +24,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-public class QRPersonActivity extends AppCompatActivity {
+public class QRPerson extends AppCompatActivity {
 
     SurfaceView cameraPreview;
     TextView textResult;
@@ -93,7 +90,7 @@ public class QRPersonActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
 
                     // Request permissions
-                    ActivityCompat.requestPermissions(QRPersonActivity.this,
+                    ActivityCompat.requestPermissions(QRPerson.this,
                             new String[]{Manifest.permission.CAMERA},
                             RequestCameraPermissionID);
                     return;
