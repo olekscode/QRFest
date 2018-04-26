@@ -1,6 +1,7 @@
 package com.example.oleks.qrfest;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,9 +29,13 @@ public class QRPerson extends AppCompatActivity {
 
     SurfaceView cameraPreview;
     TextView textResult;
+    TextView qrScannerTitle;
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+
+    Boolean isPerson;
+    String prevId;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -65,6 +70,7 @@ public class QRPerson extends AppCompatActivity {
 
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         textResult = (TextView) findViewById(R.id.textResult);
+        qrScannerTitle = (TextView) findViewById(R.id.qrScannerTitle);
 
         barcodeDetector = new BarcodeDetector
                 .Builder(this)
@@ -75,6 +81,22 @@ public class QRPerson extends AppCompatActivity {
                 .Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(640, 480)
                 .build();
+
+        Bundle b = getIntent().getExtras();
+        isPerson = b.getBoolean("isPerson");
+
+        if (isPerson) {
+            prevId = "";
+            qrScannerTitle.setText(R.string.person_qr_title);
+            textResult.setText(R.string.result_text_default);
+        }
+        else {
+            b = getIntent().getExtras();
+            prevId = b.getString("prevId");
+
+            qrScannerTitle.setText(R.string.product_qr_title);
+            textResult.setText(R.string.result_text_product);
+        }
 
         // Add event
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -121,44 +143,56 @@ public class QRPerson extends AppCompatActivity {
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
+                release();
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
 
                 if (qrcodes.size() != 0)
                 {
-                    textResult.post(new Runnable() {
-                        @Override
-                        public void run() {
+//                    textResult.post(new Runnable() {
+//                        @Override
+//                        public void run() {
 //                            Vibrator vibrator = (Vibrator)getApplicationContext()
 //                                    .getSystemService(Context.VIBRATOR_SERVICE);
 //                            vibrator.vibrate(1000);
 
-                            // Instantiate the RequestQueue.
-                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                            String url = "http://www.google.com";
+//                            // Instantiate the RequestQueue.
+//                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                            String url = "http://www.google.com";
+//
+//                            // Request a string response from the provided URL.
+//                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                                    new Response.Listener<String>() {
+//                                        @Override
+//                                        public void onResponse(String response) {
+//                                            // Display the first 500 characters of the response string.
+//                                            textResult.setText("Response is: "+ response.substring(0,100));
+//                                        }
+//                                    }, new Response.ErrorListener() {
+//                                @Override
+//                                public void onErrorResponse(VolleyError error) {
+//                                    textResult.setText("That didn't work!");
+//                                }
+//                            });
+//
+//                            // Add the request to the RequestQueue.
+//                            queue.add(stringRequest);
 
-                            // Request a string response from the provided URL.
-                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            // Display the first 500 characters of the response string.
-                                            textResult.setText("Response is: "+ response.substring(0,100));
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    textResult.setText("That didn't work!");
-                                }
-                            });
+                        String id = qrcodes.valueAt(0).displayValue;
 
-                            // Add the request to the RequestQueue.
-                            queue.add(stringRequest);
-
-                            //textResult.setText(qrcodes.valueAt(0).displayValue);
-                        }
-                    });
+                        Intent intent = new Intent(QRPerson.this, PersonOKActivity.class);
+                        Bundle b = new Bundle();
+                        b.putBoolean("isPerson", isPerson);
+                        b.putString("id", id);
+                        b.putString("prevId", prevId);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                        finish();
+//                        }
+//                    });
                 }
             }
         });
     }
+
+    //...
 }
