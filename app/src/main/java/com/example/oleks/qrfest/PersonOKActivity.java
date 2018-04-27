@@ -79,7 +79,7 @@ public class PersonOKActivity extends AppCompatActivity {
                     showProgress(true);
 
                     RequestQueue queue = Volley.newRequestQueue(PersonOKActivity.this);
-                    String url = "https://stark-lowlands-20761.herokuapp.com/auth/sign_in";
+                    String url = "http://35.193.37.53:5444/create_user/";
 
                     StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                             new Response.Listener<String>()
@@ -113,8 +113,10 @@ public class PersonOKActivity extends AppCompatActivity {
                         protected Map<String, String> getParams()
                         {
                             Map<String, String>  params = new HashMap<String, String>();
-                            params.put("email", "seller@test.test");
-                            params.put("password", "password");
+                            params.put("attendee_id", prevId);
+                            params.put("product_id", id);
+                            params.put("shop_id", "3");
+                            params.put("amount", "20");
 
                             return params;
                         }

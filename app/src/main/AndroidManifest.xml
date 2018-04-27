@@ -19,8 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,19 +27,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".QRPerson" />
+        <activity android:name=".PersonOKActivity"/>
+        <activity android:name=".ResultActivity"/>
 
         <meta-data
             android:name="com.google.android.gms:vision.DEPENDENCIES"
             android:value="barcode" />
-
-        <activity android:name=".PersonOKActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ResultActivity"></activity>
     </application>
 
 </manifest>
